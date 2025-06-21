@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Hospital {
+  id             String    @id @default(uuid())
+  name           String
+  location       String
+  contactPerson  String
+  email          String   @unique
+  passwordHash   String
+  createdAt      DateTime @default(now())
+
+  resources      Resource[]
+  sentRequests   Request[] @relation("Sender")
+  receivedRequests Request[] @relation("Receiver")
+}
+
+model Resource {
+  id          String    @id @default(uuid())
+  type        String    // oxygen, icu, blood, ambulance
+  available   Int
+  inUse       Int
+  lastUpdated DateTime  @updatedAt
+
+  hospital    Hospital  @relation(fields: [hospitalId], references: [id])
+  hospitalId  String
+}
+
+model Request {
+  id          String    @id @default(uuid())
+  resourceType String   // oxygen, icu, etc.
+  quantity    Int
+  status      String    @default("pending") // pending, approved, declined
+  message     String?
+
+  fromHospital   Hospital @relation("Sender", fields: [fromHospitalId], references: [id])
+  toHospital     Hospital @relation("Receiver", fields: [toHospitalId], references: [id])
+  fromHospitalId String
+  toHospitalId   String
+
+  createdAt    DateTime @default(now())
+}
+
