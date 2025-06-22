@@ -1,0 +1,17 @@
+# Ignore node modules installed at root
+/node_modules/
+
+# Environment files
+.env
+
+# Logs
+*.log
+
+# OS/system files
+.DS_Store
+
+# Editor configs
+.vscode/
+
+# Temporary or test files
+testClient.js
