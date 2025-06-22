@@ -1,5 +1,9 @@
 import express from 'express';
-import { createRequest } from '../controllers/requestController.js';
+import {
+  createRequest,
+  getAllRequests,
+  updateRequestStatus
+} from '../controllers/requestController.js';
 
 const router = express.Router();
 
